@@ -1,6 +1,7 @@
 // src/routes/index.js
 
 const express = require('express');
+const { authenticate } = require('../authorization');
 
 // version and author from package.json
 const { version, author } = require('../../package.json');
@@ -10,8 +11,9 @@ const router = express.Router();
 
 /**
  * Expose all of our API routes on /v1/* to include an API version.
+ * Protect them all so you have to be authenticated in order to access.
  */
-router.use(`/v1`, require('./api'));
+router.use(`/v1`, authenticate(), require('./api'));
 
 /**
  * Define a simple health check route. If the server is running
