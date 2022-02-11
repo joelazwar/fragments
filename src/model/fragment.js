@@ -11,21 +11,26 @@ const {
   writeFragmentData,
   listFragments,
   deleteFragment,
-} = require('./data');
+} = require('./data/memory');
 
 class Fragment {
-  constructor({ id, ownerId, created, updated, type, size = 0 }) {
-    // TODO
+  constructor({ id = nanoid(), ownerId, created, updated, type, size = 0 }) {
+    this.id = id
+    this.ownerId = ownerId
+    this.created = created
+    this.updated = updated
+    this.type = type
+    this.size = size
   }
 
-  /**
+  /**h
    * Get all fragments (id or full) for the given user
    * @param {string} ownerId user's hashed email
    * @param {boolean} expand whether to expand ids to full fragments
    * @returns Promise<Array<Fragment>>
    */
   static async byUser(ownerId, expand = false) {
-    // TODO
+    return Promise.all(listFragments(ownerId, expand))
   }
 
   /**
@@ -35,7 +40,7 @@ class Fragment {
    * @returns Promise<Fragment>
    */
   static async byId(ownerId, id) {
-    // TODO
+    return readFragment(ownerId, id)
   }
 
   /**
@@ -45,7 +50,7 @@ class Fragment {
    * @returns Promise
    */
   static delete(ownerId, id) {
-    // TODO
+    return deleteFragment(ownerId, id)
   }
 
   /**
@@ -53,7 +58,7 @@ class Fragment {
    * @returns Promise
    */
   save() {
-    // TODO
+    return writeFragment(this);
   }
 
   /**
@@ -61,7 +66,7 @@ class Fragment {
    * @returns Promise<Buffer>
    */
   getData() {
-    // TODO
+    return readFragmentData(this.ownerId, this.id)
   }
 
   /**
@@ -70,7 +75,7 @@ class Fragment {
    * @returns Promise
    */
   async setData(data) {
-    // TODO
+    return writeFragmentData(data)
   }
 
   /**
@@ -88,7 +93,7 @@ class Fragment {
    * @returns {boolean} true if fragment's type is text/*
    */
   get isText() {
-    // TODO
+    return this.mimeType().includes('text/')
   }
 
   /**
@@ -105,7 +110,7 @@ class Fragment {
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
-    // TODO
+    return this.formats().includes(value)
   }
 }
 
