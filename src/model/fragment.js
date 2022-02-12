@@ -14,7 +14,18 @@ const {
 } = require('./data/memory');
 
 class Fragment {
-  constructor({ id = nanoid(), ownerId, created, updated, type, size = 0 }) {
+  constructor({ id = nanoid(), ownerId, created = Date.now(), updated = Date.now(), type, size = 0 }) {
+    // try{
+    if(!ownerId) throw new Error("Owner Id is required")
+    if(!type) throw new Error("Content Type is required")
+    //if(Number.isInteger(size)) throw new Error("Size must be a number")
+    if(size < 0) throw new Error ("Size cannot be negative")
+    //if(!this.isSupportedType(type)) throw new Error("Type is not supported")
+    // }
+    // catch (ex) {
+    //   console.error('inner', ex.message);
+    // }
+
     this.id = id
     this.ownerId = ownerId
     this.created = created
@@ -101,7 +112,7 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    // TODO
+    return ['text/plain']
   }
 
   /**
@@ -110,7 +121,9 @@ class Fragment {
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
-    return this.formats().includes(value)
+    console.log(this.formats)
+    console.log(this.formats?.includes(value))
+    return this.formats?.includes(value)
   }
 }
 
