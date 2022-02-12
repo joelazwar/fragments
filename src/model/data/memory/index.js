@@ -33,6 +33,9 @@ async function listFragments(ownerId, expand = false) {
     return fragments;
   }
 
+  //Deal with undefined in empty results
+  if (!fragments[0]) return [];
+
   // Otherwise, map to only send back the ids
   return fragments.map((fragment) => fragment.id);
 }

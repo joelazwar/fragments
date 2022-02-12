@@ -13,25 +13,46 @@ const {
   deleteFragment,
 } = require('./data/memory');
 
-class Fragment {
-  constructor({ id = nanoid(), ownerId, created = Date.now(), updated = Date.now(), type, size = 0 }) {
-    // try{
-    if(!ownerId) throw new Error("Owner Id is required")
-    if(!type) throw new Error("Content Type is required")
-    //if(Number.isInteger(size)) throw new Error("Size must be a number")
-    if(size < 0) throw new Error ("Size cannot be negative")
-    //if(!this.isSupportedType(type)) throw new Error("Type is not supported")
-    // }
-    // catch (ex) {
-    //   console.error('inner', ex.message);
-    // }
+const validTypes = [
+  `text/plain`,
+  /*
+   Currently, only text/plain is supported. Others will be added later.
 
-    this.id = id
-    this.ownerId = ownerId
-    this.created = created
-    this.updated = updated
-    this.type = type
-    this.size = size
+  `text/markdown`,
+  `text/html`,
+  `application/json`,
+  `image/png`,
+  `image/jpeg`,
+  `image/webp`,
+  `image/gif`,
+  */
+];
+
+class Fragment {
+  constructor({
+    id = nanoid(),
+    ownerId,
+    created = new Date().toString(),
+    updated = new Date().toString(),
+    type,
+    size = 0,
+  }) {
+    try {
+      if (!ownerId) throw 'Owner Id is required';
+      if (!type) throw 'Content Type is required';
+      if (typeof size !== 'number') throw 'Size must be a number';
+      if (size < 0) throw 'Size cannot be negative';
+      if (!this.constructor.isSupportedType(type)) throw 'Type is not supported';
+    } catch (err) {
+      throw new Error(`Error: ${err}`);
+    }
+
+    this.id = id;
+    this.ownerId = ownerId;
+    this.created = created;
+    this.updated = updated;
+    this.type = type;
+    this.size = size;
   }
 
   /**h
@@ -41,7 +62,7 @@ class Fragment {
    * @returns Promise<Array<Fragment>>
    */
   static async byUser(ownerId, expand = false) {
-    return Promise.all(listFragments(ownerId, expand))
+    return listFragments(ownerId, expand);
   }
 
   /**
@@ -52,6 +73,14 @@ class Fragment {
    */
   static async byId(ownerId, id) {
     return readFragment(ownerId, id)
+      .then((data) => {
+        if (!data) throw 'not found';
+
+        return data;
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
   }
 
   /**
@@ -61,14 +90,15 @@ class Fragment {
    * @returns Promise
    */
   static delete(ownerId, id) {
-    return deleteFragment(ownerId, id)
+    return deleteFragment(ownerId, id);
   }
 
   /**
    * Saves the current fragment to the database
-   * @returns Promise
+   * @returns Promisue
    */
   save() {
+    this.updated = new Date().toString();
     return writeFragment(this);
   }
 
@@ -77,7 +107,7 @@ class Fragment {
    * @returns Promise<Buffer>
    */
   getData() {
-    return readFragmentData(this.ownerId, this.id)
+    return readFragmentData(this.ownerId, this.id);
   }
 
   /**
@@ -86,7 +116,11 @@ class Fragment {
    * @returns Promise
    */
   async setData(data) {
-    return writeFragmentData(data)
+    if (!data) throw new Error('Fragment Data is required');
+
+    this.updated = new Date().toString();
+    this.size += 1;
+    return writeFragmentData(this.ownerId, this.id, data);
   }
 
   /**
@@ -95,8 +129,7 @@ class Fragment {
    * @returns {string} fragment's mime type (without encoding)
    */
   get mimeType() {
-    const { type } = contentType.parse(this.type);
-    return type;
+    return contentType.parse(this.type).type;
   }
 
   /**
@@ -104,7 +137,7 @@ class Fragment {
    * @returns {boolean} true if fragment's type is text/*
    */
   get isText() {
-    return this.mimeType().includes('text/')
+    return contentType.parse(this.type).type.includes('text/');
   }
 
   /**
@@ -112,7 +145,7 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    return ['text/plain']
+    return validTypes;
   }
 
   /**
@@ -121,9 +154,7 @@ class Fragment {
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
-    console.log(this.formats)
-    console.log(this.formats?.includes(value))
-    return this.formats?.includes(value)
+    return validTypes.includes(contentType.parse(value).type);
   }
 }
 
