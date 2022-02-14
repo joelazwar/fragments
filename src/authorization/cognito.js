@@ -1,5 +1,7 @@
 // src/authorization/cognito.js
 
+const authorize = require('./authorize-middleware');
+
 // Configure a JWT token strategy for Passport based on
 // Identity Token provided by Cognito. The token will be
 // parsed from the Authorization header (i.e., Bearer Token).
@@ -55,4 +57,5 @@ module.exports.strategy = () =>
     }
   });
 
-module.exports.authenticate = () => passport.authenticate('bearer', { session: false });
+module.exports.authenticate = () => authorize('bearer')//passport.authenticate('bearer', { session: false });
+

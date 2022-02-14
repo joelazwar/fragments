@@ -1,5 +1,7 @@
 // src/authorization/basic-auth.js
 
+const authorize = require('./authorize-middleware');
+
 // Configure HTTP Basic Auth strategy for Passport, see:
 // https://github.com/http-auth/http-auth-passport
 
@@ -21,4 +23,4 @@ module.exports.strategy = () =>
     })
   );
 
-module.exports.authenticate = () => passport.authenticate('http', { session: false });
+module.exports.authenticate = () => authorize('http')//passport.authenticate('http', { session: false });

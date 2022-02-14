@@ -32,8 +32,8 @@ class Fragment {
   constructor({
     id = nanoid(),
     ownerId,
-    created = new Date().toString(),
-    updated = new Date().toString(),
+    created = new Date().toISOString(),
+    updated = new Date().toISOString(),
     type,
     size = 0,
   }) {
@@ -118,7 +118,7 @@ class Fragment {
   async setData(data) {
     if (!data) throw new Error('Fragment Data is required');
 
-    this.updated = new Date().toString();
+    this.updated = new Date().toISOString();
     this.size += 1;
     return writeFragmentData(this.ownerId, this.id, data);
   }
