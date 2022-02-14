@@ -12,9 +12,9 @@ module.exports = async (req, res) => {
   else {
     const fragment = new Fragment({ ownerId: req.user, type: 'text/plain' });
 
-    fragment.setData(req.body);
+    await fragment.setData(req.body);
 
-    fragment.save();
+    await fragment.save();
 
     res
       .status(201)
