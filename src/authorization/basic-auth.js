@@ -23,4 +23,4 @@ module.exports.strategy = () =>
     })
   );
 
-module.exports.authenticate = () => authorize('http')//passport.authenticate('http', { session: false });
+module.exports.authenticate = () => authorize('http'); //passport.authenticate('http', { session: false });

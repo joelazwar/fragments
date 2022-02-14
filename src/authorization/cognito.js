@@ -57,5 +57,4 @@ module.exports.strategy = () =>
     }
   });
 
-module.exports.authenticate = () => authorize('bearer')//passport.authenticate('bearer', { session: false });
-
+module.exports.authenticate = () => authorize('bearer'); //passport.authenticate('bearer', { session: false });
