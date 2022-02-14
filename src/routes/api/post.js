@@ -1,24 +1,28 @@
 // src/routes/api/post.js
 
-const { createSuccessResponse } = require('../../response');
-const Fragment = require('../../model/fragment');
-const { hash } = require('../../../utils/hash');
+const { createSuccessResponse, createErrorResponse } = require('../../response');
+const { Fragment } = require('../../model/fragment');
 
 /**
  * Create a fragment for current user
  */
-module.exports = (req, res) => {
-  const fragment = new Fragment({ ownerId: hash(req.user), type: 'text/plain' });
+module.exports = async (req, res) => {
+  if (!Buffer.isBuffer(req.body) || req.body == {})
+    res.status(415).json(createErrorResponse(415, 'Invalid type: Not Supported'));
+  else {
+    const fragment = new Fragment({ ownerId: req.user, type: 'text/plain' });
 
-  fragment.save();
+    fragment.setData(req.body);
 
-  // TODO: this is just a placeholder to get something working...
-  res
-    .status(201)
-    .location(hash(`/v1/fragments/${req.user}`))
-    .json(
-      createSuccessResponse({
-        fragments: [],
-      })
-    );
+    fragment.save();
+
+    res
+      .status(201)
+      .location(`/v1/fragments/${req.user}`)
+      .json(
+        createSuccessResponse({
+          fragment: await Fragment.byId(fragment.ownerId, fragment.id),
+        })
+      );
+  }
 };

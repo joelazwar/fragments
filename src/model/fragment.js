@@ -98,7 +98,7 @@ class Fragment {
    * @returns Promisue
    */
   save() {
-    this.updated = new Date().toString();
+    this.updated = new Date().toISOString();
     return writeFragment(this);
   }
 
