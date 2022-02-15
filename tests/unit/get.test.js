@@ -1,8 +1,11 @@
 // tests/unit/get.test.js
 
 const request = require('supertest');
+const { Fragment } = require('../../src/model/fragment');
 
 const app = require('../../src/app');
+const hash = require('../../utils/hash');
+//const {Fragment} = require('../../src/model/fragment')
 
 describe('GET /v1/fragments', () => {
   // If the request is missing the Authorization header, it should be forbidden
@@ -19,6 +22,28 @@ describe('GET /v1/fragments', () => {
     expect(res.body.status).toBe('ok');
     expect(Array.isArray(res.body.fragments)).toBe(true);
   });
+});
+describe('GET /v1/fragments/:id', () => {
+  test('Invalid id param results in error', async () => {
+    const res = await request(app)
+      .get('/v1/fragments/invalid')
+      .auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(404);
+  });
 
-  // TODO: we'll need to add tests to check the contents of the fragments array later
+  test('Create a text fragment, then fetch the route to view raw data', async () => {
+    const fragment = new Fragment({
+      id: '1234',
+      ownerId: hash('user1@email.com'),
+      type: 'text/plain',
+    });
+
+    await fragment.setData(Buffer.from('a'));
+
+    await fragment.save();
+
+    const res = await request(app).get('/v1/fragments/1234').auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(200);
+    expect(res.text).toBe('a');
+  });
 });
