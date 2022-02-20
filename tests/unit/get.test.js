@@ -4,7 +4,7 @@ const request = require('supertest');
 const { Fragment } = require('../../src/model/fragment');
 
 const app = require('../../src/app');
-const hash = require('../../utils/hash');
+const hash = require('../../src/utils/hash');
 //const {Fragment} = require('../../src/model/fragment')
 
 describe('GET /v1/fragments', () => {

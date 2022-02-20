@@ -1,7 +1,7 @@
 const passport = require('passport');
 
 const { createErrorResponse } = require('../response');
-const hash = require('../../utils/hash');
+const hash = require('../utils/hash');
 const logger = require('../logger');
 
 /**
