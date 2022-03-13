@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
   if (!Buffer.isBuffer(req.body) || req.body == {})
     res.status(415).json(createErrorResponse(415, 'Invalid type: Not Supported'));
   else {
-    const fragment = new Fragment({ ownerId: req.user, type: 'text/plain' });
+    const fragment = new Fragment({ ownerId: req.user, type: req.headers['content-type'] });
 
     await fragment.setData(req.body);
 

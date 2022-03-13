@@ -24,10 +24,10 @@ module.exports.id = async (req, res) => {
 
     const data = await fragment.getData();
 
-   res.set('Content-Type', fragment.mimeType); //Only supports plain text for now
+    res.set('Content-Type', fragment.mimeType);
 
     res.status(200).send(Buffer.from(data).toString('utf-8'));
-  } catch (err){
+  } catch (err) {
     res.status(404).json(createErrorResponse(404, err));
   }
 };
