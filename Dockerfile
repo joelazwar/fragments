@@ -16,14 +16,18 @@ ENV NPM_CONFIG_LOGLEVEL=warn
 # https://docs.npmjs.com/cli/v8/using-npm/config#color
 ENV NPM_CONFIG_COLOR=false
 
+RUN useradd -ms /bin/bash user
+
+USER user
+
 # Use /app as our working directory
-WORKDIR /app
+WORKDIR /home/user/app
 
 # Copy the package.json and package-lock.json files into the working dir (/app)
 COPY package.json package-lock.json ./
 
 # Install node dependencies defined in package-lock.json
-RUN npm install
+RUN npm ci --only=production 
 
 # Copy src to /app/src/
 COPY ./src ./src
@@ -32,7 +36,7 @@ COPY ./src ./src
 COPY ./tests/.htpasswd ./tests/.htpasswd
 
 # Start the container by running our server
-CMD npm start
+CMD ["dumb-init", "node", "src/index.js"]
 
 # We run our service on port 8080
 EXPOSE 8080
