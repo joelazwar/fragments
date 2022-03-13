@@ -16,6 +16,12 @@ ENV NPM_CONFIG_LOGLEVEL=warn
 # https://docs.npmjs.com/cli/v8/using-npm/config#color
 ENV NPM_CONFIG_COLOR=false
 
+# Download dumb-init
+RUN wget https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_amd64.deb
+RUN dpkg -i dumb-init_*.deb
+
+
+# Add user to prevent using root user
 RUN useradd -ms /bin/bash user
 
 USER user
