@@ -7,12 +7,13 @@ const { Fragment } = require('../../model/fragment');
  * Get a list of fragments for the current user
  */
 module.exports.list = async (req, res) => {
-  // TODO: this is just a placeholder to get something working...
-  res.status(200).json(
-    createSuccessResponse({
-      fragments: await Fragment.byUser(req.user, req.query?.expand === '1'),
-    })
-  );
+  try {
+    const fragments = await Fragment.byUser(req.user, req.query?.expand === '1');
+
+    res.status(200).json(createSuccessResponse({ fragments: fragments }));
+  } catch (err) {
+    res.status(404).json(createErrorResponse(404, err));
+  }
 };
 
 /**
@@ -26,7 +27,7 @@ module.exports.id = async (req, res) => {
 
     res.set('Content-Type', fragment.mimeType);
 
-    res.status(200).send(Buffer.from(data).toString('utf-8'));
+    res.status(200).send(data);
   } catch (err) {
     res.status(404).json(createErrorResponse(404, err));
   }

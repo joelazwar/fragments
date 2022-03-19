@@ -18,10 +18,10 @@ module.exports = async (req, res) => {
 
     res
       .status(201)
-      .location(`/v1/fragments/${req.user}`)
+      .location(`http://localhost:${process.env.PORT}/v1/fragments/${fragment.id}`)
       .json(
         createSuccessResponse({
-          fragment: await Fragment.byId(fragment.ownerId, fragment.id),
+          fragment: fragment,
         })
       );
   }

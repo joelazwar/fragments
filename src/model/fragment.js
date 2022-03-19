@@ -38,11 +38,11 @@ class Fragment {
     size = 0,
   }) {
     try {
-      if (!ownerId) throw 'Owner Id is required';
-      if (!type) throw 'Content Type is required';
-      if (typeof size !== 'number') throw 'Size must be a number';
-      if (size < 0) throw 'Size cannot be negative';
-      if (!this.constructor.isSupportedType(type)) throw 'Type is not supported';
+      if (!ownerId) throw new Error('Owner Id is required');
+      if (!type) throw new Error('Content Type is required');
+      if (typeof size !== 'number') throw new Error('Size must be a number');
+      if (size < 0) throw new Error('Size cannot be negative');
+      if (!this.constructor.isSupportedType(type)) throw new Error('Type is not supported');
     } catch (err) {
       throw new Error(`Error: ${err}`);
     }
@@ -72,15 +72,13 @@ class Fragment {
    * @returns Promise<Fragment>
    */
   static async byId(ownerId, id) {
-    return readFragment(ownerId, id)
-      .then((data) => {
-        if (!data) throw 'not found';
-
-        return data;
-      })
-      .catch((err) => {
-        throw new Error(err);
-      });
+    try {
+      const data = await readFragment(ownerId, id);
+      if (!data) throw new Error('not found');
+      return data;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   /**
