@@ -21,13 +21,17 @@ module.exports.list = async (req, res) => {
  */
 module.exports.id = async (req, res) => {
   try {
-    const fragment = await Fragment.byId(req.user, req.params.id);
+    const fragment = await Fragment.byId(req.user, req.params['id']);
 
     const data = await fragment.getData();
 
     res.set('Content-Type', fragment.mimeType);
 
-    res.status(200).send(data);
+    if (req.params[0] === '/info') {
+      res.status(200).send(fragment);
+    } else {
+      res.status(200).send(data);
+    }
   } catch (err) {
     res.status(404).json(createErrorResponse(404, err));
   }

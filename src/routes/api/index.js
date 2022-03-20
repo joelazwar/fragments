@@ -13,7 +13,7 @@ const get = require('./get');
 // Define our first route, which will be: GET /v1/fragments
 router.get('/fragments', get.list);
 
-router.get('/fragments/:id', get.id);
+router.get('/fragments/:id*', get.id);
 
 // Support sending various Content-Types on the body up to 5M in size
 const rawBody = () =>
