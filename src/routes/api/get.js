@@ -31,8 +31,9 @@ module.exports.id = async (req, res) => {
     } else if (req.params[1]?.includes('.')) {
       //only support markdown to html conversion for now
       if (req.params[2] === 'html' && fragment.mimeType === 'text/markdown') {
+        var md = require('markdown-it')();
         res.set('Content-Type', 'text/html');
-        res.status(200).json(createSuccessResponse({ result: `extension ${req.params[2]} works` }));
+        res.status(200).send(md.render(data.toString()));
       } else throw new Error(`${fragment.mimeType} to ${req.params[2]} conversion not supported`);
     } else {
       res.set('Content-Type', fragment.mimeType);
