@@ -28,12 +28,18 @@ module.exports.id = async (req, res) => {
     if (req.params[0] === '/info') {
       res.set('Content-Type', 'application/json');
       res.status(200).json(createSuccessResponse({ fragment: fragment }));
+    } else if (req.params[1]?.includes('.')) {
+      //only support markdown to html conversion for now
+      if (req.params[2] === 'html' && fragment.mimeType === 'text/markdown') {
+        res.set('Content-Type', 'text/html');
+        res.status(200).json(createSuccessResponse({ result: `extension ${req.params[2]} works` }));
+      } else throw new Error(`${fragment.mimeType} to ${req.params[2]} conversion not supported`);
     } else {
       res.set('Content-Type', fragment.mimeType);
       res.status(200).send(data);
     }
   } catch (err) {
     res.set('Content-Type', 'application/json');
-    res.status(404).json(createErrorResponse(404, err));
+    res.status(404).json(createErrorResponse(404, err.message));
   }
 };
