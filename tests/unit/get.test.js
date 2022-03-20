@@ -31,7 +31,7 @@ describe('GET /v1/fragments/:id', () => {
     expect(res.statusCode).toBe(404);
   });
 
-  test('Create a text fragment, then fetch the route to view raw data', async () => {
+  test('View raw text fragment', async () => {
     const fragment = new Fragment({
       id: '1234',
       ownerId: hash('user1@email.com'),
@@ -44,6 +44,59 @@ describe('GET /v1/fragments/:id', () => {
 
     const res = await request(app).get('/v1/fragments/1234').auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(200);
+    expect(res.type).toBe('text/plain');
     expect(res.text).toBe('a');
+  });
+  test('View json fragment', async () => {
+    const json = { name: 'John Doe', age: 22 };
+    const fragment = new Fragment({
+      id: '1234',
+      ownerId: hash('user1@email.com'),
+      type: 'application/json',
+    });
+
+    await fragment.setData(json);
+
+    await fragment.save();
+
+    const res = await request(app).get('/v1/fragments/1234').auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(200);
+    expect(res.type).toBe('application/json');
+    expect(res.body).toStrictEqual(json);
+  });
+});
+describe('GET /v1/fragments/:id/info', () => {
+  test('View raw text fragment metadata', async () => {
+    const fragment = new Fragment({
+      id: '1234',
+      ownerId: hash('user1@email.com'),
+      type: 'text/plain',
+    });
+
+    await fragment.setData(Buffer.from('a'));
+
+    await fragment.save();
+
+    const expected = {
+      status: 'ok',
+      fragment: {
+        created: fragment.created,
+        id: fragment.id,
+        ownerId: fragment.ownerId,
+        size: fragment.size,
+        type: fragment.type,
+        updated: fragment.updated,
+      },
+    };
+
+    const res = await request(app)
+      .get('/v1/fragments/1234/info')
+      .auth('user1@email.com', 'password1');
+
+    console.log(res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.type).toBe('application/json');
+    expect(res.body).toStrictEqual(expected);
   });
 });

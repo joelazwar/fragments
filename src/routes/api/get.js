@@ -25,14 +25,15 @@ module.exports.id = async (req, res) => {
 
     const data = await fragment.getData();
 
-    res.set('Content-Type', fragment.mimeType);
-
     if (req.params[0] === '/info') {
-      res.status(200).send(fragment);
+      res.set('Content-Type', 'application/json');
+      res.status(200).json(createSuccessResponse({ fragment: fragment }));
     } else {
+      res.set('Content-Type', fragment.mimeType);
       res.status(200).send(data);
     }
   } catch (err) {
+    res.set('Content-Type', 'application/json');
     res.status(404).json(createErrorResponse(404, err));
   }
 };
