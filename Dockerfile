@@ -17,10 +17,13 @@ ENV NPM_CONFIG_LOGLEVEL=warn
 ENV NPM_CONFIG_COLOR=false
 
 # Download dumb-init
-RUN wget --progress=dot:giga https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_amd64.deb \
-    dpkg -i dumb-init_*.deb \
+RUN wget \
+  --no-verbose --show-progress \
+  --progress=bar:force:noscroll \
+  https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_amd64.deb && \
+  dpkg -i dumb-init_*.deb &&\
 # Add user to prevent using root user
-    useradd -ms /bin/bash user
+  useradd -ms /bin/bash user
 
 USER user
 
