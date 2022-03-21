@@ -93,10 +93,47 @@ describe('GET /v1/fragments/:id/info', () => {
       .get('/v1/fragments/1234/info')
       .auth('user1@email.com', 'password1');
 
-    console.log(res);
-
     expect(res.statusCode).toBe(200);
     expect(res.type).toBe('application/json');
     expect(res.body).toStrictEqual(expected);
+  });
+});
+describe('GET /v1/fragments/:id.ext', () => {
+  test('Convert Markdown fragment to HTML', async () => {
+    const fragment = new Fragment({
+      id: '1234',
+      ownerId: hash('user1@email.com'),
+      type: 'text/markdown',
+    });
+
+    await fragment.setData(Buffer.from('# This is a Header'));
+
+    await fragment.save();
+
+    const res = await request(app)
+      .get('/v1/fragments/1234.html')
+      .auth('user1@email.com', 'password1');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.type).toBe('text/html');
+    expect(res.text).toBe('<h1>This is a Header</h1>\n');
+  });
+  test('Test unsupported conversion', async () => {
+    const fragment = new Fragment({
+      id: '1234',
+      ownerId: hash('user1@email.com'),
+      type: 'text/html',
+    });
+
+    await fragment.setData(Buffer.from('# This is a Header'));
+
+    await fragment.save();
+
+    const res = await request(app)
+      .get('/v1/fragments/1234.json')
+      .auth('user1@email.com', 'password1');
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body.error.message).toBe('text/html to json conversion not supported');
   });
 });
