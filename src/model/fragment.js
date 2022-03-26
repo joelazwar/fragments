@@ -117,7 +117,7 @@ class Fragment {
     if (!data) throw new Error('Fragment Data is required');
 
     this.updated = new Date().toISOString();
-    this.size += 1;
+    this.size = Buffer.byteLength(data);
     return writeFragmentData(this.ownerId, this.id, data);
   }
 
