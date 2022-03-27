@@ -44,9 +44,9 @@ GET {{url}}
 Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
 
 HTTP/1.1 200
-Content-Type: application/json; charset=utf-8
 Content-Length: 165
 [Asserts]
+header "Content-Type" startsWith "application/json"
 jsonpath "$.id" == 0
 jsonpath "$.name" == "Frieda"
 jsonpath "$.picture" == "images/scottish-terrier.jpeg"
