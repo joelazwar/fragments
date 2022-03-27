@@ -55,7 +55,7 @@ describe('GET /v1/fragments/:id', () => {
       type: 'application/json',
     });
 
-    await fragment.setData(json);
+    await fragment.setData(JSON.stringify(json));
 
     await fragment.save();
 
