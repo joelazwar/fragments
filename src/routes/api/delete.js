@@ -13,7 +13,7 @@ module.exports.id = async (req, res) => {
     Fragment.delete(fragment.ownerId, fragment.id);
 
     res.set('Content-Type', 'application/json');
-    res.status(404).json(createSuccessResponse());
+    res.status(200).json(createSuccessResponse());
   } catch (err) {
     res.set('Content-Type', 'application/json');
     res.status(404).json(createErrorResponse(404, err.message));
