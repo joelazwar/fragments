@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
 
     res
       .status(201)
-      .location(`http://localhost:${process.env.PORT}/v1/fragments/${fragment.id}`)
+      .location(`${process.env.API_URL}/v1/fragments/${fragment.id}`)
       .json(
         createSuccessResponse({
           fragment: fragment,
