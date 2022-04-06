@@ -16,3 +16,4 @@ services:
       # The S3 Bucket to use, default to `fragments` if missing
       - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME:-fragments}
       - AWS_REGION
+      - API_URL
