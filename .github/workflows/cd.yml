@@ -17,7 +17,7 @@ on:
     # Whenever a new tag is pushed
     tags:
       # Any tag starting with v... should trigger this workflow.
-      - 'v**'
+      - '[0-9]+.[0-9]+.[0-9]*'
 
 jobs:
   # NOTE: this assumes our CI jobs have already passed previously
