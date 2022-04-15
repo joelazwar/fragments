@@ -21,7 +21,9 @@ module.exports.list = async (req, res) => {
  */
 module.exports.id = async (req, res) => {
   try {
-    const fragment = await Fragment.byId(req.user, req.params['id']);
+    let fragment = new Fragment({ ownerId: req.user, type: 'text/plain' }); //placeholder values
+
+    fragment = await Fragment.byId(req.user, req.params['id']);
 
     const data = await fragment.getData();
 
