@@ -75,7 +75,14 @@ class Fragment {
     try {
       const data = await readFragment(ownerId, id);
       if (!data) throw new Error('Fragment id not found');
-      return data;
+      return new Fragment({
+        id: id,
+        ownerId: ownerId,
+        created: data.created,
+        updated: data.updated,
+        type: data.type,
+        size: data.size,
+      });
     } catch (err) {
       throw new Error(err);
     }
