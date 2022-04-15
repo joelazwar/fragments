@@ -134,6 +134,8 @@ describe('GET /v1/fragments/:id.ext', () => {
       .auth('user1@email.com', 'password1');
 
     expect(res.statusCode).toBe(404);
-    expect(res.body.error.message).toBe('text/html to json conversion not supported');
+    expect(res.body.error.message).toBe(
+      "'text/html' fragments can only be converted to '.html', '.txt'"
+    );
   });
 });
