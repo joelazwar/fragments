@@ -1,4 +1,4 @@
-// src/routes/api/post.js
+// src/routes/api/put.js
 
 const { createSuccessResponse, createErrorResponse } = require('../../response');
 const { Fragment } = require('../../model/fragment');
@@ -8,11 +8,14 @@ const { Fragment } = require('../../model/fragment');
  */
 module.exports = async (req, res) => {
   try {
-    if (!Buffer.isBuffer(req.body) || req.body == {})
-      res.status(415).json(createErrorResponse(415, 'Invalid type: Not Supported'));
-    else {
-      const fragment = new Fragment({ ownerId: req.user, type: req.headers['content-type'] });
+    const fragment = await Fragment.byId(req.user, req.params['id']);
 
+    if (fragment.type !== req.headers['content-type']) {
+      res.set('Content-Type', 'application/json');
+      res
+        .status(400)
+        .json(createErrorResponse(400, "A fragment's type can not be changed after it is created"));
+    } else {
       await fragment.setData(req.body);
 
       await fragment.save();
