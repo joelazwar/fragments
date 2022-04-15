@@ -27,16 +27,58 @@ module.exports.id = async (req, res) => {
 
     const data = await fragment.getData();
 
+    const type = fragment.mimeType;
+
     if (req.params[0] === '/info') {
       res.set('Content-Type', 'application/json');
       res.status(200).json(createSuccessResponse({ fragment: fragment }));
     } else if (req.params[1]?.includes('.')) {
-      //only support markdown to html conversion for now
-      if (req.params[2] === 'html' && fragment.mimeType === 'text/markdown') {
-        var md = require('markdown-it')();
-        res.set('Content-Type', 'text/html');
-        res.status(200).send(md.render(data.toString()));
-      } else throw new Error(`${fragment.mimeType} to ${req.params[2]} conversion not supported`);
+      const ext = req.params[2];
+
+      if (type === 'text/plain') {
+        if (ext === 'txt') {
+          res.set('Content-Type', fragment.mimeType);
+          res.status(200).send(data);
+        } else throw new Error("'text/plain' fragments can only be converted to '.txt'");
+      }
+
+      if (type === 'text/markdown') {
+        if (ext === 'md') {
+          res.set('Content-Type', fragment.mimeType);
+          res.status(200).send(data);
+        } else if (ext === 'txt') {
+          res.set('Content-Type', 'text/plain');
+          res.status(200).send(data);
+        } else if (ext === 'html') {
+          var md = require('markdown-it')();
+          res.set('Content-Type', 'text/html');
+          res.status(200).send(md.render(data.toString()));
+        } else
+          throw new Error(
+            "'text/markdown' fragments can only be converted to '.md', '.html', '.txt'"
+          );
+      }
+
+      if (type === 'text/html') {
+        if (ext === 'html') {
+          res.set('Content-Type', fragment.mimeType);
+          res.status(200).send(data);
+        } else if (ext === 'txt') {
+          res.set('Content-Type', 'text/plain');
+          res.status(200).send(data);
+        } else throw new Error("'text/html' fragments can only be converted to '.html', '.txt'");
+      }
+
+      if (type === 'application/json') {
+        if (ext === 'json') {
+          res.set('Content-Type', fragment.mimeType);
+          res.status(200).send(data);
+        } else if (ext === 'txt') {
+          res.set('Content-Type', 'text/plain');
+          res.status(200).send(data);
+        } else
+          throw new Error("'application/json' fragments can only be converted to '.json', '.txt'");
+      }
     } else {
       res.set('Content-Type', fragment.mimeType);
       res.status(200).send(data);
