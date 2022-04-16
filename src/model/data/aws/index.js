@@ -185,7 +185,7 @@ async function deleteFragment(ownerId, id) {
   // Configure our DELETE params, with the name of the table and item (attributes and keys)
   const params2 = {
     TableName: process.env.AWS_DYNAMODB_TABLE_NAME,
-    Item: id,
+    Item: readFragment(ownerId, id),
   };
 
   // Create a DELETE command to send to DynamoDB
