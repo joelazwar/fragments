@@ -125,7 +125,7 @@ describe('GET /v1/fragments/:id.ext', () => {
       type: 'text/html',
     });
 
-    await fragment.setData(Buffer.from('# This is a Header'));
+    await fragment.setData(Buffer.from('<h1>This is a Header</h1>'));
 
     await fragment.save();
 
