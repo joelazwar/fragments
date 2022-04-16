@@ -153,7 +153,7 @@ async function listFragments(ownerId, expand = false) {
     // If we haven't expanded to include all attributes, remap this array from
     // [ {"id":"6-b-3pSg9F054u-11oItP"}, {"id":"AmXx1tgo-H1iJLFL3DQcE"} ,... ] to
     // [ "6-b-3pSg9F054u-11oItP", "AmXx1tgo-H1iJLFL3DQcE", ... ]
-    return !expand ? data?.Items.map((item) => item.id) : data?.Items
+    return !expand ? data?.Items.map((item) => item.id) : data?.Items;
   } catch (err) {
     logger.error({ err, params }, 'error getting all fragments for user from DynamoDB');
     throw err;
@@ -182,19 +182,19 @@ async function deleteFragment(ownerId, id) {
     throw new Error('unable to delete fragment');
   }
 
-  // Configure our PUT params, with the name of the table and item (attributes and keys)
+  // Configure our DELETE params, with the name of the table and item (attributes and keys)
   const params2 = {
     TableName: process.env.AWS_DYNAMODB_TABLE_NAME,
-    Item: fragment,
+    Item: id,
   };
 
-  // Create a PUT command to send to DynamoDB
+  // Create a DELETE command to send to DynamoDB
   const command2 = new DeleteCommand(params2);
 
   try {
     return ddbDocClient.send(command2);
   } catch (err) {
-    logger.warn({ err, params, fragment }, 'error deleting fragment to DynamoDB');
+    logger.warn({ err, ...params2 }, 'error deleting fragment in DynamoDB');
     throw err;
   }
 }
