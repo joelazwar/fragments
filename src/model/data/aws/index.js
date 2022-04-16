@@ -182,10 +182,12 @@ async function deleteFragment(ownerId, id) {
     throw new Error('unable to delete fragment');
   }
 
+  // DELETE dynamoDb Metadata
+
   // Configure our DELETE params, with the name of the table and item (attributes and keys)
   const params2 = {
     TableName: process.env.AWS_DYNAMODB_TABLE_NAME,
-    Item: readFragment(ownerId, id),
+    Key: { ownerId, id },
   };
 
   // Create a DELETE command to send to DynamoDB
