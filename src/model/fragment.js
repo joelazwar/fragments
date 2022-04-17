@@ -18,14 +18,10 @@ const validTypes = [
   `text/markdown`,
   `text/html`,
   `application/json`,
-  /*
-   Not yet supported
-
   `image/png`,
   `image/jpeg`,
   `image/webp`,
   `image/gif`,
-  */
 ];
 
 class Fragment {

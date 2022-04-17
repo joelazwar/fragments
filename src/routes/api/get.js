@@ -78,6 +78,9 @@ module.exports.id = async (req, res) => {
           res.status(200).send(data);
         } else
           throw new Error("'application/json' fragments can only be converted to '.json', '.txt'");
+      } else if (type.startsWith('image/')) {
+        res.set('Content-Type', fragment.mimeType);
+        res.status(200).send(data);
       }
     } else {
       res.set('Content-Type', fragment.mimeType);
