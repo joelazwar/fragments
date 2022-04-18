@@ -13,16 +13,7 @@ const {
   deleteFragment,
 } = require('./data');
 
-const validTypes = [
-  `text/plain`,
-  `text/markdown`,
-  `text/html`,
-  `application/json`,
-  `image/png`,
-  `image/jpeg`,
-  `image/webp`,
-  `image/gif`,
-];
+const validTypes = [`text/`, `application/json`, `image/`];
 
 class Fragment {
   constructor({
@@ -155,7 +146,13 @@ class Fragment {
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
-    return validTypes.includes(contentType.parse(value).type);
+    var returnVal = false;
+    validTypes.forEach((a) => {
+      if (contentType.parse(value).type.includes(a)) {
+        returnVal = true;
+      }
+    });
+    return returnVal;
   }
 }
 

@@ -1,6 +1,11 @@
 const sharp = require('sharp');
 var md = require('markdown-it')();
 
+/*
+ * @param {string} type: Initial Content-Type
+ * @param {Buffer} data: buffer of fragment data
+ * @param {string} ext: extension of type to convert to.
+ */
 module.exports = async (type, data, ext) => {
   const defaultVal = { newType: type, newData: data };
 
@@ -36,5 +41,8 @@ module.exports = async (type, data, ext) => {
       return { newType: 'image/webp', newData: await sharp(data).webp().toBuffer() };
     if (ext == 'gif') return { newType: 'image/gif', newData: await sharp(data).gif().toBuffer() };
     else throw new Error(`${type} cannot be converted to .${ext}`);
-  }
+  } else
+    throw new Error(
+      `${type} currently does not support any conversion. (Please omit the extension to retrieve fragment data)`
+    );
 };

@@ -4,7 +4,7 @@ POST http://localhost:8080/v1/fragments
 # user1@email.com:password1
 Authorization: Basic dXNlcjFAZW1haWwuY29tOnBhc3N3b3JkMQ==
 # Set an unsupported type to the header
-Content-Type: text/csv
+Content-Type: video/ogg
 # Body of the request goes in ```...``` when it's a string
 ```This is a fragment!```
 
