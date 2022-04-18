@@ -77,8 +77,8 @@ HTTP/1.1 200
 [Asserts]
 jsonpath "$.status" == "ok"
 jsonpath "$.fragments" isCollection
-jsonpath "$.fragments[0]" == {{fragment1_id}}
-jsonpath "$.fragments[1]" == {{fragment2_id}}
+jsonpath "$.fragments" includes {{fragment1_id}}
+jsonpath "$.fragments" includes {{fragment2_id}}
 
 # 6. DELETE the first fragment using the url
 DELETE {{fragment1_url}}
@@ -101,5 +101,5 @@ HTTP/1.1 200
 [Asserts]
 jsonpath "$.status" == "ok"
 jsonpath "$.fragments" isCollection
-jsonpath "$.fragments[1]" not exists
-jsonpath "$.fragments[0]" == {{fragment2_id}}
+jsonpath "$.fragments" not includes {{fragment1_id}}
+jsonpath "$.fragments" includes {{fragment2_id}}
