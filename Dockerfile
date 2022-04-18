@@ -43,7 +43,7 @@ FROM base as production
 WORKDIR /home/node/app
 
 # Install production dependencies
-RUN npm install --production
+RUN npm install --production --platform=linuxmusl --arch=x64
 
 ## Deploy ######################################################################
 # Use a smaller node image (-alpine) at runtime
