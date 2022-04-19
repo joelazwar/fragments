@@ -84,22 +84,22 @@ describe('Convert Module', () => {
 
   describe('JSON Fragment', () => {
     test('Convert to .json', async () => {
-      const { newType, newData } = await convert('application/json', data, 'json');
+      const { newType, newData } = await convert('application/json', json, 'json');
 
       expect(newType).toBe('application/json');
-      expect(newData).toBe(data);
+      expect(newData).toBe(json);
     });
 
     test('Convert to .txt', async () => {
-      const { newType, newData } = await convert('application/json', data, 'txt');
+      const { newType, newData } = await convert('application/json', json, 'txt');
 
       expect(newType).toBe('text/plain');
-      expect(newData).toBe(data);
+      expect(newData).toBe(json);
     });
 
     test('Unsupported JSON conversion', async () => {
       try {
-        await convert('application/json', data, 'md');
+        await convert('application/json', json, 'md');
         expect(true).toBe(false);
       } catch (e) {
         expect(e.message).toBe(
