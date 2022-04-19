@@ -14,7 +14,8 @@ const del = require('./delete');
 // Define our first route, which will be: GET /v1/fragments
 router.get('/fragments', get.list);
 
-router.get('/fragments/:id*(.*)?', get.id);
+router.get('/fragments/:id.:ext?', get.id);
+router.get('/fragments/:id/info', get.idInfo);
 
 // Support sending various Content-Types on the body up to 5M in size
 const rawBody = () =>
