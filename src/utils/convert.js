@@ -36,7 +36,8 @@ module.exports = async (type, data, ext) => {
 
   if (type.startsWith('image/')) {
     if (ext == 'png') return { newType: 'image/png', newData: await sharp(data).png().toBuffer() };
-    if (ext == 'jpg') return { newType: 'image/jpg', newData: await sharp(data).jpeg().toBuffer() };
+    if (ext == 'jpg')
+      return { newType: 'image/jpeg', newData: await sharp(data).jpeg().toBuffer() };
     if (ext == 'webp')
       return { newType: 'image/webp', newData: await sharp(data).webp().toBuffer() };
     if (ext == 'gif') return { newType: 'image/gif', newData: await sharp(data).gif().toBuffer() };

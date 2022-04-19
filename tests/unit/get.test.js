@@ -5,7 +5,6 @@ const { Fragment } = require('../../src/model/fragment');
 
 const app = require('../../src/app');
 const hash = require('../../src/utils/hash');
-//const {Fragment} = require('../../src/model/fragment')
 
 describe('GET /v1/fragments', () => {
   // If the request is missing the Authorization header, it should be forbidden
@@ -96,6 +95,15 @@ describe('GET /v1/fragments/:id/info', () => {
     expect(res.statusCode).toBe(200);
     expect(res.type).toBe('application/json');
     expect(res.body).toStrictEqual(expected);
+  });
+  test('Try and retrieve nonexistent fragment metadata', async () => {
+    const res = await request(app)
+      .get('/v1/fragments/0000/info')
+      .auth('user1@email.com', 'password1');
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body.status).toBe('error');
+    expect(res.body.error.message).toBe('Error: Fragment id not found');
   });
 });
 describe('GET /v1/fragments/:id.ext', () => {

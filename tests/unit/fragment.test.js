@@ -14,6 +14,8 @@ const validTypes = [
   `image/gif`,
 ];
 
+const formats = [`text/`, `application/json`, `image/`];
+
 describe('Fragment class', () => {
   test('common formats are supported', () => {
     validTypes.forEach((format) => expect(Fragment.isSupportedType(format)).toBe(true));
@@ -159,7 +161,7 @@ describe('Fragment class', () => {
         type: 'text/plain; charset=utf-8',
         size: 0,
       });
-      expect(fragment.formats).toEqual(validTypes);
+      expect(fragment.formats).toEqual(formats);
     });
   });
 
